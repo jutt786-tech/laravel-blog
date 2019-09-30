@@ -1,0 +1,1 @@
+<a href="{{url('verify/$user->email/$user->verifytokne')}}">click here verify to your email</a>
