@@ -29,6 +29,10 @@ Route::resource('post','PostController');
 Route::resource('postview','PostviewController');
 Route::resource('category','CategoryController');
 Route::resource('product','ProductController');
+Route::resource('company','CompanyController');
+Route::resource('branch','BranchController');
+Route::resource('contect','ContactController');
+Route::resource('hour','HourController');
 
 
 
