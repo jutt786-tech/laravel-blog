@@ -17,6 +17,8 @@ class CreateBranchesTable extends Migration
             $table->bigIncrements('id');
             $table->string('bname');
             $table->string('location');
+            $table->unsignedBigInteger('company_id');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -9,13 +9,10 @@ class Contact extends Model
     //
     protected $guarded = [];
 
-    public  function branch(){
+    public  function branches(){
 
          return $this->belongsTo('App\Branch');
     }
 
-    public  function hours(){
 
-        return $this->hasMany('App\Hour');
-    }
 }

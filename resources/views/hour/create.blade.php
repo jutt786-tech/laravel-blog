@@ -1,6 +1,6 @@
 @extends('admin.partials.app')
 
-@section('title', 'add hours')
+@section('title', 'add Hour')
 
 @section('content')
     <div class="container-fluid">
@@ -8,7 +8,7 @@
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="#">Hours</a>
+                <a href="#">Hour</a>
             </li>
             <li class="breadcrumb-item active">Overview</li>
         </ol>
@@ -19,112 +19,126 @@
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <div class="card">
-                            <div class="card-header">{{ __('ADD Hours') }}</div>
+                            <div class="card-header">{{ __('ADD Contact') }}</div>
 
                             <div class="card-body">
-                                @if(request()->path()=="hour/create")
-                                    <form method="POST" action="{{ route('hour.store') }}">
-                                        @csrf
-                                        <div class="form-group row">
-                                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Enter hours') }}</label>
 
-                                            <div class="col-md-6">
-                                                <input id="hour" type="tel" class="form-control @error('hour') is-invalid @enderror" name="hour" value="{{ old('hour') }}" required autocomplete="name" autofocus>
+                                <form method="POST" action="@if(isset($br->id)){{route('hour.update',$br->id) }} @else {{ route('hour.store') }} @endif ">
 
-                                                @error('hour')
-                                                <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                                @enderror
+
+                                    @if(isset($br->id)) @csrf @method('PUT') @else @csrf  @endif
+                                    <div id="locationappend">
+
+                                        <div class="form-row">
+                                            @if(isset($br->id))
+                                                <div class="col-md-8 col-md-offset-2">
+                                                    <div class="position-relative form-group">
+                                                        <label for="bname" class="">Enter Branches</label>
+                                                        <input name="bname" id="bname_" placeholder="Branch" type="text"
+                                                               class="form-control"
+                                                               value="{{$br->bname}}">
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div class="col-md-8 col-md-offset-2">
+                                                    <div class="position-relative form-group">
+                                                        <label for="bname" class="">Enter Branches</label>
+                                                        <select name="branch_id" class="form-control">
+                                                            @foreach($branches as $branch)
+                                                                <option value="{{$branch->id}}">{{$branch->bname}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            @endif
+
+
+                                            @if(isset($br->hours))
+                                                @foreach($br->hours as $h)
+                                                    <input type="hidden" name="id[]" value="{{$h->id}}">
+                                                    <div class="col-md-8 ">
+                                                        <div class="position-relative form-group">
+                                                            <label for="hour" class="">Enter Hour</label>
+                                                            <input name="hour[]" id="hour_" placeholder="Hour" type="text"
+                                                                   class="form-control"
+                                                                   value="{{$h->hour}}">
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="col-md-8 ">
+                                                    <div class="position-relative form-group">
+                                                        <label for="hour" class="">Enter Hour</label>
+                                                        <input name="hour[]" id="hour_" placeholder="Hour" type="text"
+                                                               class="form-control"
+                                                               value="">
+                                                    </div>
+                                                </div>
+
+                                            @endif
+
+                                            <div class="col-md-2" style="margin-top: 32px">
+                                                <a href="javascript:void(0);"
+                                                   class="btn-wide btn-shadow btn btn-info" id="btn-add"
+                                                   title="add location form">+</a>
+
+                                                <a href="javascript:void(0);"
+                                                   class="btn-wide btn-shadow btn btn-danger" id="btn-remove"
+                                                   title="remove location form">-</a>
                                             </div>
+
                                         </div>
+                                    </div>
+                                    <div class="form-row col-md-12 ">
+                                        <button type="submit" class="btn btn-primary">
+                                            @if(isset($br->id)) {{'Update'}} @else {{'Submit'}}  @endif
+                                        </button>
+                                    </div>
 
-                                        <div class="form-group row">
-                                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Select Contact') }}</label>
+                                </form>
 
-                                            <div class="col-md-6">
-                                                <select name="contact_id"  class="form-control" >
-                                                    @foreach($contacts as $contact)
-                                                        <option value="{{$contact->id}}">{{$contact->phone}}</option>
-                                                    @endforeach
-                                                </select>
-
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-group row mb-0">
-                                            <div class="col-md-6 offset-md-4">
-                                                <button type="submit" class="btn btn-primary">
-                                                    {{ __('Submit') }}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                @else
-                                    <form method="POST" action="{{ route('hour.update', $hour->id) }}">
-                                        @csrf
-                                        @method('PUT')
-
-                                        <div class="form-group row">
-                                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Enter hours') }}</label>
-
-                                            <div class="col-md-6">
-                                                <input id="hour" type="tel" class="form-control @error('hour') is-invalid @enderror" name="hour" value="{{ $hour->hour }}" required autocomplete="name" autofocus>
-
-                                                @error('hour')
-                                                <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Select Contact') }}</label>
-
-                                            <div class="col-md-6">
-                                                <select name="contact_id"  class="form-control" >
-                                                    @foreach($contacts as $contact)
-                                                        <option value="{{$contact->id}}">{{$contact->phone}}</option>
-                                                    @endforeach
-                                                </select>
-
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-group row mb-0">
-                                            <div class="col-md-6 offset-md-4">
-                                                <button type="submit" class="btn btn-primary">
-                                                    {{ __('Submit') }}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                @endif
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
-
         </div>
 
+    </div>
 
-        <!-- Sticky Footer -->
-        <footer class="sticky-footer">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright © Your Website 2019</span>
-                </div>
+
+    <!-- Sticky Footer -->
+    <footer class="sticky-footer">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright © Your Website 2019</span>
             </div>
-        </footer>
+        </div>
+    </footer>
 
     </div>
 
     </div>
     <!-- /#wrapper -->
+@endsection
+@section('js')
+    <script type="text/javascript">
+
+        $('#btn-add').on('click', function (e) {
+
+            $.get("{{route('add.hour')}}").done(function (data) {
+                $('#locationappend').append(data);
+            })
+            $('#location').append('gsvdv');
+        });
+        $('#btn-remove').on('click', function (e) {
+            $('.opt:last').remove();
+            $('hr:last').remove();
+        });
+
+
+    </script>
 @endsection
 
 

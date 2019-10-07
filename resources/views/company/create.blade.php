@@ -18,96 +18,91 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-header">{{ __('ADD Company') }}</div>
+                        <form method="post"
+                              action="@if(isset($company->id)) {{route('company.update',$company->id)}}
+                              @else {{route('company.store')}}  @endif">
+                            @if(isset($company->id)) @csrf @method('PUT') @else @csrf  @endif
 
-                            <div class="card-body">
-                                    @if(request()->path()=="company/create")
-                                    <form method="POST" action="{{ route('company.store') }}">
-                                        @csrf
-                                        <div class="form-group row">
-                                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Enter company') }}</label>
+                            <div id="locationappend">
 
-                                            <div class="col-md-6">
-                                                <input id="cname" type="text" class="form-control @error('cname') is-invalid @enderror" name="cname" value="{{ old('cname') }}" required autocomplete="name" autofocus>
+                            <div class="text-info small"><strong>If You want to update company location then change the
+                                    input value and press update button </strong></div>
+                            <div class="form-row">
 
-                                                @error('cname')
-                                                <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                                @enderror
+                                <div class="col-md-8 col-md-offset-2">
+                                    <div class="position-relative form-group">
+                                        <label for="cname" class="">Company Name</label>
+                                        <input name="cname" id="cname_" placeholder="company" type="text"
+                                               class="form-control"
+                                               value="{{isset($company->cname) ? $company->cname : ''}}  ">
+                                    </div>
+                                </div>
+
+                                @if(isset($company->branches))
+                                    @foreach($company->branches as $branch)
+                                        <input type="hidden" name="id[]" value="{{$branch->id}}">
+                                        <div class="col-md-8 ">
+                                            <div class="position-relative form-group">
+                                                <label for="cname" class="">Enter Branch</label>
+                                                <input name="bname[]" id="bname_" placeholder="branches" type="text"
+                                                       class="form-control"
+                                                       value="{{$branch->bname}}">
                                             </div>
                                         </div>
 
-                                        <div class="form-group row">
-                                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Select Branch') }}</label>
-
-                                            <div class="col-md-6">
-                                                <select name="branch_id[]"  class="form-control" multiple>
-                                                    @foreach($branches as $branch)
-                                                        <option value="{{$branch->id}}">{{$branch->bname}}</option>
-                                                    @endforeach
-                                                </select>
-
+                                        <div class="col-md-8 ">
+                                            <div class="position-relative form-group">
+                                                <label for="cname" class="">Enter Location</label>
+                                                <input name="location[]" id="location_" placeholder="Location" type="text"
+                                                       class="form-control"
+                                                       value="{{$branch->location}}">
                                             </div>
                                         </div>
 
-                                        <div class="form-group row mb-0">
-                                            <div class="col-md-6 offset-md-4">
-                                                <button type="submit" class="btn btn-primary">
-                                                    {{ __('Submit') }}
-                                                </button>
-                                            </div>
+                                    @endforeach
+                                    @else
+                                    <div class="col-md-8 ">
+                                        <div class="position-relative form-group">
+                                            <label for="cname" class="">Enter Branch</label>
+                                            <input name="bname[]" id="bname_" placeholder="branches" type="text"
+                                                   class="form-control"
+                                                   value="">
                                         </div>
-                                    </form>
-                                @else
-                                    <form method="POST" action="{{ route('company.update', $company->id) }}">
-                                        @csrf
-                                        @method('PUT')
+                                    </div>
 
-                                        <div class="form-group row">
-                                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Enter Company') }}</label>
-
-                                            <div class="col-md-6">
-                                                <input id="cname" type="text" class="form-control @error('cname') is-invalid @enderror" name="cname" value="{{$company->cname}}" required autocomplete="name" autofocus>
-
-                                                @error('p_name')
-                                                    <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
+                                    <div class="col-md-8 ">
+                                        <div class="position-relative form-group">
+                                            <label for="cname" class="">Enter Location</label>
+                                            <input name="location[]" id="location_" placeholder="Location" type="text"
+                                                   class="form-control"
+                                                   value="">
                                         </div>
-
-
-                                        <div class="form-group row">
-                                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Select Branch') }}</label>
-
-                                            <div class="col-md-6">
-                                                <select name="branch_id[]"  class="form-control" multiple>
-                                                    @foreach($branches as $branch)
-                                                        <option value="{{$branch->id}}">{{$branch->bname}}</option>
-                                                    @endforeach
-                                                </select>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row mb-0">
-                                            <div class="col-md-6 offset-md-4">
-                                                <button type="submit" class="btn btn-primary">
-                                                    {{ __('Submit') }}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                    </div>
                                 @endif
+                                <div class="col-md-2" style="margin-top: 32px">
+                                    <a href="javascript:void(0);"
+                                       class="btn-wide btn-shadow btn btn-info" id="btn-add"
+                                       title="add location form">+</a>
+
+                                    <a href="javascript:void(0);"
+                                       class="btn-wide btn-shadow btn btn-danger" id="btn-remove"
+                                       title="remove location form">-</a>
+                                </div>
+
                             </div>
                         </div>
+
+                        <div class="form-row col-md-12 ">
+                            <button type="submit" class="btn btn-primary">
+                                {{isset($company->cname) ? 'Update' : 'Submit'}}
+                            </button>
+                        </div>
+
+                        </form>
+
                     </div>
                 </div>
             </div>
-
         </div>
 
 
@@ -122,8 +117,28 @@
 
     </div>
 
-    </div>
     <!-- /#wrapper -->
+
+
+
+@endsection
+@section('js')
+    <script type="text/javascript">
+
+        $('#btn-add').on('click', function (e) {
+
+            $.get("{{route('add.location')}}").done(function (data) {
+                $('#locationappend').append(data);
+            })
+            $('#location').append('gsvdv');
+        });
+        $('#btn-remove').on('click', function (e) {
+            $('.opt:last').remove();
+            $('hr:last').remove();
+        });
+
+
+    </script>
 @endsection
 
 

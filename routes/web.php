@@ -34,7 +34,12 @@ Route::resource('branch','BranchController');
 Route::resource('contect','ContactController');
 Route::resource('hour','HourController');
 
+//Route::resource('location', 'LocationController');
+//Route::view('/location', 'location_form')->name('location');
 
+Route::view('location-append', 'location.append_location')->name('add.location');
+Route::view('contect-append', 'contect.append_location')->name('add.contact');
+Route::view('hour-append', 'hour.append_hour')->name('add.hour');
 
 Auth::routes(['verify' => true]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Branch;
 use App\Contact;
 use App\Hour;
 use Illuminate\Http\Request;
@@ -16,8 +17,9 @@ class HourController extends Controller
     public function index()
     {
         //
-       $hours=  Hour::all();
-        return  view('hour.index',compact('hours'));
+       $branches  =  Branch::with('hours')->get();
+
+        return  view('hour.index',compact('branches'));
     }
 
     /**
@@ -28,8 +30,8 @@ class HourController extends Controller
     public function create()
     {
         //
-       $contacts = Contact::all();
-        return  view('hour.create',compact('contacts'));
+        $branches     = Branch::all();
+        return  view('hour.create',compact('branches'));
     }
 
     /**
@@ -41,8 +43,19 @@ class HourController extends Controller
     public function store(Request $request)
     {
         //
-        $hour= new Hour($request->all());
-        $hour->save();
+//            dd($request->all());
+       $bid = Branch::findOrFail($request->branch_id);
+        $bid->id = $request->branch_id;
+        $bid->save();
+
+        foreach ($request->hour as $key => $h){
+          $hours = new Hour();
+          $hours->hour = $h;
+          $hours->branch_id = $bid->id;
+
+          $hours->save();
+        }
+
         return redirect(route('hour.index'))->with('message','Hour Created sucessfully');
 
     }
@@ -67,9 +80,10 @@ class HourController extends Controller
     public function edit( $id)
     {
         //
-      $hour = Hour::find($id);
-        $contacts = Contact::all();
-        return  view('hour.create',compact('hour','contacts'));
+        $br = Branch::with('hours')->find($id);
+
+//        $branches = Branch::all();
+        return  view('hour.create',compact('br'));
 
     }
 
@@ -83,8 +97,27 @@ class HourController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $hour = Hour::find($id);
-        $hour->update($request->all());
+//dd($request->all());
+        $bid = Branch::find($id);
+        $bid->bname = $request->bname;
+        $bid->save();
+
+        foreach ($request->hour as $key => $value){
+            if (!empty($request->id[$key])){
+                $hid = Hour::findOrFail($request->id[$key]);
+                $hid->hour  =  $request->hour[$key];
+                $hid->save();
+
+            }else{
+              $h = new  Hour();
+              $h->hour = $request->hour[$key];
+              $h->branch_id =$bid->id;
+              $h->save();
+
+            }
+        }
+
+//        $hour->update($request->all());
         return redirect(route('hour.index'))->with('message','Hour updated sucessfully');
 
 
@@ -99,7 +132,7 @@ class HourController extends Controller
     public function destroy($id)
     {
         //
-        $hour = Hour::find($id);
+        $hour = Branch::find($id);
         $hour->delete();
         return redirect(route('hour.index'))->with('message','Hour DELETED sucessfully');
 

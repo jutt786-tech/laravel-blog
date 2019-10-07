@@ -16,9 +16,9 @@ class ContactController extends Controller
     public function index()
     {
         //
-       $contacts = Contact:: with('branch')->get();
-//       dd($contacts);
-       return  view('contect.index',compact('contacts'));
+       $branches = Branch::with('contact')->get();
+
+       return  view('contect.index',compact('branches'));
     }
 
     /**
@@ -42,8 +42,18 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         //
-        $cid = new Contact($request->all());
-        $cid->save();
+//dd($request->all());
+        $branch =Branch::FindorFail( $request->branch_id);
+        $branch->id = $request->branch_id;
+        $branch->save();
+//        dd('ok');
+        foreach ($request->phone as $contact){
+            $c =  new Contact();
+            $c->phone = $contact;
+            $c->branch_id = $branch->id;
+            $c->save();
+        }
+
         return  redirect(route('contect.index'))->with('message','Data store sucessfully');
     }
 
@@ -67,8 +77,10 @@ class ContactController extends Controller
     public function edit( $id)
     {
         //
-       $contect = Contact::find($id);
-       return  view('contect.create',compact('contect'));
+       $br  = Branch::with('contact')->find($id);
+        $branches = Branch::all();
+
+        return  view('contect.create',compact('br','branches'));
     }
 
     /**
@@ -81,9 +93,28 @@ class ContactController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $cid =  Contact::find($id);
-        $cid->update($request->all());
-        $cid->save();
+//        dd($request->all());
+        $branchid = Branch::findOrFail($id);
+        $branchid->bname = $request->bname;
+        $branchid->save();
+
+        foreach ($request->phone as $key => $value){
+
+            if (!empty($request->id[$key])){
+
+                $cid         =  Contact::findOrFail( $request->id[$key]);
+                $cid->phone  =  $request->phone[$key];
+                $cid->save();
+
+            }else{
+                $c = new Contact();
+                $c->phone        =  $request->phone[$key];
+                $c->branch_id    =  $branchid->id;
+               $c->save();
+            }
+        }
+
+
         return redirect(route('contect.index'))->with('message','Data updated sucessfully');
     }
 
@@ -96,7 +127,7 @@ class ContactController extends Controller
     public function destroy($id)
     {
         //
-       $cid =  Contact::find($id);
+       $cid =  Branch::find($id);
        $cid->delete();
        return redirect(route('contect.index'))->with('message','Data Deleted sucessfully');
 

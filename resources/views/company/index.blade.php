@@ -39,7 +39,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Company name </th>
-                                <th>Branches</th>
+                                <th>Branches </th>
                                 <th>Edit</th>
                                 <th>Delete</th>
 
@@ -49,7 +49,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Company name</th>
-                                <th>Branches</th>
+                                <th>Branches </th>
                                 <th>edit</th>
                                 <th>delete</th>
                             </tr>
@@ -61,8 +61,8 @@
                                 <td>{{$company->cname}}</td>
                                 <td>
                                     @foreach($company->branches as $branch)
-                                    {{$branch->bname}},
-                                    @endforeach
+                                        {{$branch->bname}},
+                                        @endforeach
                                 </td>
 
                                 <td><a href="{{ route('company.index') }}/{{$company->id}}/edit" class="btn btn-primary">edit</a></td>

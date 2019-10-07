@@ -8,8 +8,9 @@ class Hour extends Model
 {
     //
     protected $guarded = [];
-    public  function contacts(){
 
-        return $this->belongsTo('App\Contact');
+    public function branches()
+    {
+        return $this->belongsTo('App\Branch');
     }
 }

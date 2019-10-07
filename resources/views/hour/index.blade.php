@@ -38,6 +38,7 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Branch</th>
                                     <th>Hour </th>
                                     <th>Edit</th>
                                     <th>Delete</th>
@@ -47,20 +48,26 @@
                                 <tfoot>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Branch</th>
                                     <th>Hours </th>
                                     <th>edit</th>
                                     <th>delete</th>
                                 </tr>
                                 </tfoot>
                                 <tbody>
-                                @foreach($hours as $h)
+                                @foreach($branches as $branch)
                                     <tr>
-                                        <td>{{$h->id}}</td>
-                                        <td>{{$h->hour}}</td>
-
-                                        <td><a href="{{ route('hour.index') }}/{{$h->id}}/edit" class="btn btn-primary">edit</a></td>
+                                        <td>{{$branch->id}}</td>
+                                        <td>{{$branch->bname}}</td>
                                         <td>
-                                            <form action="{{ route('hour.index') }}/{{$h->id}}" method="post">
+                                            @foreach($branch->hours as $h)
+                                            {{$h->hour}},
+                                            @endforeach
+                                        </td>
+
+                                        <td><a href="{{ route('hour.index') }}/{{$branch->id}}/edit" class="btn btn-primary">edit</a></td>
+                                        <td>
+                                            <form action="{{ route('hour.index') }}/{{$branch->id}}" method="post">
                                                 @method('DELETE')
                                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
 

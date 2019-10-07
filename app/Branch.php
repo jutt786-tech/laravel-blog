@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Branch extends Model
 {
     //
-    protected $guarded = [];
+    protected  $guarded = [];
+//    protected $fillable = ['bname', 'location', 'company_id'];
 
-    public  function  companys(){
-       return $this->belongsToMany('App\Company');
+    public  function  company(){
+       return $this->belongsTo('App\Company');
     }
 
 
@@ -20,6 +21,6 @@ class Branch extends Model
 
     public function hours()
     {
-        return $this->hasManyThrough('App\Hour', 'App\Contact');
+        return $this->hasMany('App\Hour');
     }
 }

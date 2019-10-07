@@ -38,6 +38,7 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Branch</th>
                                     <th>Contact </th>
                                     <th>Edit</th>
                                     <th>Delete</th>
@@ -47,20 +48,26 @@
                                 <tfoot>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Branch</th>
                                     <th>Contact </th>
                                     <th>edit</th>
                                     <th>delete</th>
                                 </tr>
                                 </tfoot>
                                 <tbody>
-                                @foreach($contacts as $contact)
+                                @foreach($branches as $branch)
                                     <tr>
-                                        <td>{{$contact->id}}</td>
-                                        <td>{{$contact->phone}}</td>
-
-                                        <td><a href="{{ route('contect.index') }}/{{$contact->id}}/edit" class="btn btn-primary">edit</a></td>
+                                        <td>{{$branch->id}}</td>
+                                        <td>{{$branch->bname}}</td>
                                         <td>
-                                            <form action="{{ route('contect.index') }}/{{$contact->id}}" method="post">
+                                        @foreach($branch->contact as $b)
+                                        {{$b->phone}},
+                                        @endforeach
+                                        </td>
+
+                                        <td><a href="{{ route('contect.index') }}/{{$branch->id}}/edit" class="btn btn-primary">edit</a></td>
+                                        <td>
+                                            <form action="{{ route('contect.index') }}/{{$branch->id}}" method="post">
                                                 @method('DELETE')
                                                 <input type="hidden" name="_token" value="{{csrf_token()}}">
 
